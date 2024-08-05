@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Introduction
+
+This is a simple Next.js application using the UI framework of [ui.shadcn.com](https://ui.shadcn.com/). This project is only intended to show how easily and quickly you can set up a website with certain functionalities using existing UI frameworks.
+
 ## Getting Started
 
 First, run the development server:
@@ -34,3 +38,19 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## NEW FEATURES
+
+## TODOS
+
+- add authentication
+- add todos page
+
+## Stay in touch
+
+- Author - [Christian Pietsch](https://github.com/cpietsch82)
+- LinkedIn - [@LinkedIn](https://www.linkedin.com/in/christian-pietsch-57247183/)
+
+## License
+
+[MIT licensed](LICENSE).
