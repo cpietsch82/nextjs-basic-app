@@ -43,8 +43,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## TODOS
 
-- add authentication
 - add todos page
+- upgrade stylings (dark vs. light mode)
+- add settings page
+- add password change functionality
 
 ## Stay in touch
 
