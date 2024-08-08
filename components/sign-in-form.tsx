@@ -7,16 +7,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "@/components/ui/use-toast";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 const formSchema = z.object({
-  email: z.string().min(2).max(50),
-  password: z.string().min(6).max(10)
+  email: z.string({ required_error: "Email is required" })
+    .min(1, "Email is required")
+    .email("Invalid email"),
+  password: z.string({ required_error: "Password is required" })
+    .min(1, "Password is required")
+    .min(8, "Password must be more than 8 characters")
+    .max(32, "Password must be less than 32 characters"),
 });
 
 export default function LoginForm() {
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -25,19 +30,30 @@ export default function LoginForm() {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const res = await signIn("credentials", {
+      email: values.email,
+      password: values.password,
+      redirect: false
+    });
+
     toast({
       title: 'click on submit',
-      description: 'login with ' + values
-    })
+      description: `login with ${values.email}`
+    });
+
+    if (res?.ok) {
+      window.location.href = "/dashboard";
+    } else {
+      toast({
+        title: 'click on submit',
+        description: `login failed`
+      });
+    }
   }
 
   return (
-    <div className="p-8  w-[400px]">
+    <div className="p-8 w-[400px]">
       <h1 className="text-xl font-bold mb-4">Log In</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -61,11 +77,8 @@ export default function LoginForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="Password" {...field} />
+                  <Input type="password" placeholder="Password" {...field} />
                 </FormControl>
-                {/* <FormDescription>
-                  This is your public display name.
-                </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
@@ -78,7 +91,7 @@ export default function LoginForm() {
           <span className="w-full border-t"></span>
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-2 text-muted-foreground">OR Sign Up</span>
+          <span className="bg-white dark:bg-zinc-900 px-2 text-muted-foreground">OR Sign Up</span>
         </div>
       </div>
       <div className="mt-4">
@@ -86,6 +99,6 @@ export default function LoginForm() {
           <Button className="w-full">Sign Up</Button>
         </Link>
       </div>
-    </div>
+    </div >
   )
 }

@@ -1,7 +1,8 @@
-import LoginForm from "@/components/login-form";
+import LoginForm from "@/components/sign-in-form";
 import Image from "next/image";
 
 export default async function Page() {
+
   return (
     <main>
       <div className="container relative min-h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">

@@ -11,12 +11,16 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import Link from "next/link";
 
 const formSchema = z.object({
-  email: z.string().min(2).max(50),
-  password: z.string().min(6).max(10)
+  email: z.string({ required_error: "Email is required" })
+    .min(1, "Email is required")
+    .email("Invalid email"),
+  password: z.string({ required_error: "Password is required" })
+    .min(1, "Password is required")
+    .min(8, "Password must be more than 8 characters")
+    .max(32, "Password must be less than 32 characters"),
 });
 
 export default function SignUpForm() {
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -25,19 +29,23 @@ export default function SignUpForm() {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: values.email,
+        password: values.password
+      })
+    })
+
     toast({
       title: 'click on submit',
-      description: 'sign up with ' + values
+      description: 'sign up with ' + values.email
     })
   }
 
   return (
-    <div className="p-8  w-[400px]">
+    <div className="p-8 w-[400px]">
       <h1 className="text-xl font-bold mb-4">Sign Up</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -50,9 +58,6 @@ export default function SignUpForm() {
                 <FormControl>
                   <Input placeholder="E-Mail" {...field} />
                 </FormControl>
-                {/* <FormDescription>
-                  E-Mail address as your account identifier
-                </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
@@ -64,11 +69,8 @@ export default function SignUpForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="Password" {...field} />
+                  <Input type="password" placeholder="Password" {...field} />
                 </FormControl>
-                {/* <FormDescription>
-                  Choose a good password
-                </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
@@ -84,12 +86,12 @@ export default function SignUpForm() {
           <span className="w-full border-t"></span>
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-2 text-muted-foreground">OR Login</span>
+          <span className="bg-white px-2 text-muted-foreground">OR Sign In</span>
         </div>
       </div>
       <div className="mt-4">
         <Link href="login">
-          <Button className="w-full">Login</Button>
+          <Button className="w-full">Sign In</Button>
         </Link>
       </div>
     </div>

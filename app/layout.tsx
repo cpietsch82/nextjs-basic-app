@@ -5,6 +5,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { SessionProvider } from 'next-auth/react';
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
   description: "Basic App to show some nice features",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -33,7 +34,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <SessionProvider>
+            {children}
+          </SessionProvider>
           <Toaster />
         </ThemeProvider>
       </body>
